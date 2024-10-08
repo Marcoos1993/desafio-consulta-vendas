@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.devsuperior.dsmeta.dto.SaleMinDTO;
 import com.devsuperior.dsmeta.dto.SaleReportDTO;
+import com.devsuperior.dsmeta.dto.SaleSummaryDTO;
 import com.devsuperior.dsmeta.entities.Sale;
 import com.devsuperior.dsmeta.repositories.SaleRepository;
 
@@ -33,11 +34,26 @@ public class SaleService {
 
 	    LocalDate max = maxDate.equals("") ? today : LocalDate.parse(maxDate);
 	    LocalDate min = minDate.equals("") ? max.minusYears(1L) : LocalDate.parse(minDate);
-		
 
 	    Page<Sale> result = repository.searchBySales(min, max, name, pageable);
 	    
 	    return result.map(x -> new SaleReportDTO(x));
 	    
 	}
+	
+
+	public Page<SaleSummaryDTO> getSummary(String minDate, String maxDate, Pageable pageable) {
+		
+	    LocalDate today = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+
+	    LocalDate max = maxDate.equals("") ? today : LocalDate.parse(maxDate);
+	    LocalDate min = minDate.equals("") ? max.minusYears(1L) : LocalDate.parse(minDate);
+	    
+	    Page<Sale> result = repository.searchBySummary(min, max, pageable);
+	    
+	    return result.map(x -> new SaleSummaryDTO(x));
+
+	    
+	}
+	
 }

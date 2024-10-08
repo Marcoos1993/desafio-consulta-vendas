@@ -25,6 +25,7 @@ public class SaleReportDTO {
 		date = entity.getDate();
 		sellerName = entity.getSeller().getName();
 	}
+	
 
 	public Long getId() {
 		return id;
