@@ -1,6 +1,7 @@
 package com.devsuperior.dsmeta.repositories;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.devsuperior.dsmeta.entities.Sale;
+import com.devsuperior.dsmeta.projections.SellerProjections;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 	
@@ -23,14 +25,13 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 		                         Pageable pageable);
 	
 	
-	@Query("SELECT obj "
-		     + "FROM Sale obj "
-		     + "WHERE obj.date BETWEEN :minDate AND :maxDate "
-		     + "AND obj.amount IN (SELECT SUM(s.amount) FROM Sale s WHERE s.date BETWEEN :minDate AND :maxDate) "
-		     + "GROUP BY obj.id, obj.date")
-	Page<Sale> searchBySummary(@Param("minDate") LocalDate minDate, 
-					           @Param("maxDate") LocalDate maxDate, 
-					           Pageable pageable);
+	@Query(nativeQuery = true, value="SELECT name, SUM(amount) AS somas "
+			+ "FROM tb_seller seller "
+			+ "INNER JOIN tb_sales sales ON seller.id = sales.seller_id "
+			+ "WHERE sales.date BETWEEN :minDate AND :maxDate "
+			+ "GROUP BY seller.name;" )
+	List<SellerProjections> searchBySummary(@Param("minDate") LocalDate minDate, 
+					           @Param("maxDate") LocalDate maxDate);
 						
 
    }

@@ -1,6 +1,6 @@
 package com.devsuperior.dsmeta.dto;
 
-import com.devsuperior.dsmeta.entities.Sale;
+import com.devsuperior.dsmeta.projections.SellerProjections;
 
 public class SaleSummaryDTO {
 	
@@ -13,9 +13,9 @@ public class SaleSummaryDTO {
 		this.total = total;
 	}
 	
-	public SaleSummaryDTO(Sale entity) {
-		this.sellerName = entity.getSeller().getName();
-		this.total = entity.getAmount();
+	public SaleSummaryDTO(SellerProjections projection) {
+		this.sellerName = projection.getName();
+		this.total = projection.getSomas();
 	}
 
 	public String getSellerName() {
